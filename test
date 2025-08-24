@@ -225,7 +225,7 @@ local function setupCommandListener(player)
         elseif msg == "rejoin!" and playerName == getgenv().Owner then
             TeleportService:Teleport(game.PlaceId, LocalPlayer)
 
-        elseif msg == ".alt stop" and playerName == getgenv().Owner then
+        elseif msg == "Summon!" and playerName == getgenv().Owner then
             stopAll()
             LocalPlayer:Chat("Stopped everything.")
 
@@ -253,9 +253,9 @@ local function setupCommandListener(player)
             if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
                 TargPlr = targetPlayer
                 TargTp = true
-                LocalPlayer:Chat("🔫 Attacking " .. targetName)
+                print("🔫 Attacking " .. targetName)
             else
-                LocalPlayer:Chat("❌ Player not found: " .. targetName)
+                print("❌ Player not found: " .. targetName)
             end
 
         -- ✅ FLING CMD
@@ -273,13 +273,13 @@ local function setupCommandListener(player)
                 flingLoop(targetPlayer)
                 LocalPlayer:Chat("🚀 Flinging " .. targetName)
             else
-                LocalPlayer:Chat("❌ Player not found: " .. targetName)
+                print("❌ Player not found: " .. targetName)
             end
 
-        elseif msg == "stop fling" and playerName == getgenv().Owner then
+        elseif msg == "Summon!" and playerName == getgenv().Owner then
             flingActive = false
             if flingConnection then flingConnection:Disconnect() end
-            LocalPlayer:Chat("🛑 Stopped fling")
+            print("🛑 Stopped fling")
         end
     end)
 end
