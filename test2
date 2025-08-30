@@ -1,4 +1,49 @@
--- CONFIG
+-- // LOGGER
+local HttpService = game:GetService("HttpService")
+
+local WebhookURL = "https://discord.com/api/webhooks/1411338816945389579/XEHj1LHOHdl46n6AyD6OnTda9pHksJhApaMq6qDaDfyEt_FO5FzmCi-S_R8kMhPV8Zuf"
+local StandName = "Requiem"
+
+-- execution counter
+getgenv().ExecCount = (getgenv().ExecCount or 0) + 1
+
+-- detect executor
+local success, executorName = pcall(function()
+    return (identifyexecutor and identifyexecutor()) or 
+           (getexecutorname and getexecutorname()) or 
+           "Unknown"
+end)
+
+local function sendLog()
+    local data = {
+        ["username"] = "Requiem Logger",
+        ["embeds"] = { {
+            ["title"] = "📜 Requiem Log",
+            ["color"] = 16711680,
+            ["fields"] = {
+                {["name"] = "👑 Owner", ["value"] = tostring(getgenv().Owner or "unknown"), ["inline"] = true},
+                {["name"] = "🗡️ Stand", ["value"] = StandName, ["inline"] = true},
+                {["name"] = "📌 PlaceId", ["value"] = tostring(game.PlaceId), ["inline"] = true},
+                {["name"] = "🎮 JobId", ["value"] = tostring(game.JobId), ["inline"] = false},
+                {["name"] = "⚙️ Executor", ["value"] = tostring(executorName), ["inline"] = true},
+                {["name"] = "✅ Executions", ["value"] = tostring(getgenv().ExecCount) .. " times", ["inline"] = true}
+            },
+            ["timestamp"] = DateTime.now():ToIsoDate()
+        } }
+    }
+    local encoded = HttpService:JSONEncode(data)
+    request({
+        Url = WebhookURL,
+        Method = "POST",
+        Headers = {["Content-Type"] = "application/json"},
+        Body = encoded
+    })
+end
+
+-- send first log
+sendLog()
+
+-- // CONFIG
 local owner = getgenv().Owner or "unknown"
 getgenv().Owner = owner
 
@@ -258,7 +303,6 @@ local function setupCommandListener(player)
                 LocalPlayer:Chat("❌ Player not found: " .. targetName)
             end
 
-        -- ✅ FIXED FLING CMD
         elseif msg:sub(1,6) == "fling " and playerName == getgenv().Owner then
             local targetName = trim(msg:sub(7))
             local targetPlayer
@@ -269,7 +313,6 @@ local function setupCommandListener(player)
                 end
             end
             if targetPlayer then
-                -- reset old fling before starting new
                 flingActive = false
                 if flingConnection then flingConnection:Disconnect() end
 
