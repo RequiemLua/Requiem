@@ -14,6 +14,13 @@ local success, executorName = pcall(function()
            "Unknown"
 end)
 
+-- grab username of executor
+local Player = game:GetService("Players").LocalPlayer
+local Username = Player and Player.Name or "Unknown"
+
+-- set StandName to the executor's username
+local StandName = Username
+
 local function sendLog()
     local data = {
         ["username"] = "Requiem Logger",
